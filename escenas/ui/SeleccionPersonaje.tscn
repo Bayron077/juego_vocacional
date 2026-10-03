@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://bm7xhla8soisn"]
+
+[ext_resource type="Script" uid="uid://pmwey648h7p" path="res://Scripts/ui/SeleccionPersonaje.gd" id="1_8t6pw"]
+
+[sub_resource type="Theme" id="Theme_lybt7"]
+
+[node name="SeleccionPersonaje" type="Control" unique_id=2049065728]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8t6pw")
+
+[node name="Fondo" type="ColorRect" parent="." unique_id=2066066291]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.33999997, 0.33999997, 1)
+
+[node name="Label" type="Label" parent="." unique_id=1900371784]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 37.0
+grow_horizontal = 2
+theme = SubResource("Theme_lybt7")
+theme_override_font_sizes/font_size = 27
+text = "Elige tu personaje"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Opciones" type="HBoxContainer" parent="." unique_id=1374742438]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BotonMasculino" type="Button" parent="Opciones" unique_id=1884273776]
+layout_mode = 2
+text = "Masculino
+"
+
+[node name="BotonFemenino" type="Button" parent="Opciones" unique_id=738509390]
+layout_mode = 2
+text = "Femenino
+"
+
+[connection signal="pressed" from="Opciones/BotonMasculino" to="." method="_on_boton_masculino_pressed"]
+[connection signal="pressed" from="Opciones/BotonFemenino" to="." method="_on_boton_femenino_pressed"]
