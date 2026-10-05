@@ -130,6 +130,9 @@ states/walking/node = SubResource("AnimationNodeBlendSpace2D_mvv3g")
 states/walking/position = Vector2(392, 100)
 transitions = ["Start", "walking", SubResource("AnimationNodeStateMachineTransition_k8jdh")]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lybt7"]
+size = Vector2(18, 10)
+
 [node name="Eda" type="CharacterBody2D" unique_id=1079774696]
 script = ExtResource("1_2tjmw")
 
@@ -145,3 +148,10 @@ libraries/ = SubResource("AnimationLibrary_sqirv")
 tree_root = SubResource("AnimationNodeStateMachine_k47yy")
 anim_player = NodePath("../AnimationPlayer")
 parameters/walking/blend_position = Vector2(0, 0)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=931528975]
+position_smoothing_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2006896552]
+position = Vector2(0, 18)
+shape = SubResource("RectangleShape2D_lybt7")

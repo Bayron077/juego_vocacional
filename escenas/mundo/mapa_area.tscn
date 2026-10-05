@@ -1,32 +1,87 @@
 [gd_scene format=3 uid="uid://gidv7dr6e2k1"]
 
-[ext_resource type="Script" uid="uid://dnn045yac7ysb" path="res://Scripts/mapa_area.gd" id="1_u1oo4"]
+[ext_resource type="Script" uid="uid://dnn045yac7ysb" path="res://Scripts/mundo/mapa_area.gd" id="1_u1oo4"]
 
-[node name="MapaArea" type="Control" unique_id=166008338]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lybt7"]
+size = Vector2(90, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k47yy"]
+size = Vector2(16, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u1oo4"]
+size = Vector2(672, 16)
+
+[node name="MapaArea" type="Node2D" unique_id=1782419937]
 script = ExtResource("1_u1oo4")
 
 [node name="Fondo" type="ColorRect" parent="." unique_id=766215409]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 640.0
+offset_bottom = 360.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.6296868, 0.60191965, 0.10047021, 1)
 
-[node name="InfoTexto" type="Label" parent="." unique_id=562868770]
-layout_mode = 1
-anchors_preset = 15
+[node name="Edificio" type="Node2D" parent="." unique_id=1345240795]
+position = Vector2(450, 150)
+
+[node name="Visual" type="ColorRect" parent="Edificio" unique_id=648900352]
+offset_left = -32.0
+offset_top = -64.0
+offset_right = 32.0
+color = Color(0.75493693, 0.5072637, 0, 1)
+
+[node name="AreaEntrada" type="Area2D" parent="Edificio" unique_id=958775619]
+position = Vector2(0, 20)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Edificio/AreaEntrada" unique_id=959797499]
+shape = SubResource("RectangleShape2D_lybt7")
+
+[node name="Bordes" type="Node2D" parent="." unique_id=232704855]
+
+[node name="BordeIzquierdo" type="StaticBody2D" parent="Bordes" unique_id=517655849]
+position = Vector2(-8, 180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeIzquierdo" unique_id=1593008070]
+shape = SubResource("RectangleShape2D_k47yy")
+
+[node name="BordeDerecho" type="StaticBody2D" parent="Bordes" unique_id=1273546903]
+position = Vector2(648, 180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeDerecho" unique_id=250388713]
+shape = SubResource("RectangleShape2D_k47yy")
+
+[node name="BordeSuperior" type="StaticBody2D" parent="Bordes" unique_id=198210782]
+position = Vector2(320, -8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeSuperior" unique_id=1130583021]
+shape = SubResource("RectangleShape2D_u1oo4")
+
+[node name="BordeInferior" type="StaticBody2D" parent="Bordes" unique_id=1589324507]
+position = Vector2(320, 368)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bordes/BordeInferior" unique_id=1063270343]
+shape = SubResource("RectangleShape2D_u1oo4")
+
+[node name="EtiquetaEdificio" type="Label" parent="." unique_id=1660691637]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Edificio
+"
+
+[node name="CapaUI" type="CanvasLayer" parent="." unique_id=2069909506]
+
+[node name="EtiquetaPrompt" type="Label" parent="CapaUI" unique_id=985022723]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -49.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
+text = "Presiona Enter para entrar
+"
 horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://qmhhxh84lace"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_sf1sk"]
+
+[resource]
+script = ExtResource("1_sf1sk")
+nombre_area = "Tecnologia y Computacion "
+nombre_edificio = "Facultad de ingenieria"
+color_zona = Color(0.2, 0.2, 0.46666667, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"
