@@ -11,9 +11,12 @@ var indice_actual: int = 0
 
 func _ready() -> void:
 	mostrar_dialogo_actual()
+	GameState.enfocar_primer_boton(self)
+
 
 func mostrar_dialogo_actual() -> void:
 	$TextoDialogo.text = dialogos[indice_actual]
+
 
 func _on_boton_siguiente_pressed() -> void:
 	indice_actual += 1

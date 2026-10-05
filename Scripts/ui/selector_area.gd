@@ -27,7 +27,12 @@ func _ready() -> void:
 		boton.text = area
 		boton.pressed.connect(_on_area_elegida.bind(area))
 		$ContenedorScroll/ListaAreas.add_child(boton)
-		
+
+	# Con el D-pad la lista debe desplazarse sola hacia el botón enfocado.
+	$ContenedorScroll.follow_focus = true
+	GameState.enfocar_primer_boton(self)
+
+
 func _on_area_elegida(area: String) -> void:
 	GameState.elegir_area(area)
 	GameState.ir_a_escena("res://escenas/mundo/mapa_area.tscn")

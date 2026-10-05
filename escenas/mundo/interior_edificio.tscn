@@ -16,6 +16,8 @@ script = ExtResource("1_i2m1x")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 480.0
+offset_bottom = 270.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.46887457, 0.6387938, 0.57249135, 1)
@@ -41,7 +43,7 @@ grow_horizontal = 2
 horizontal_alignment = 1
 
 [node name="Salida" type="Area2D" parent="." unique_id=373324969]
-position = Vector2(380, 220)
+position = Vector2(420, 245)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Salida" unique_id=677109915]
 shape = SubResource("RectangleShape2D_lybt7")
@@ -53,12 +55,12 @@ offset_right = 30.0
 offset_bottom = 10.0
 
 [node name="Npc2" parent="." unique_id=110552784 instance=ExtResource("2_hjq4e")]
-position = Vector2(213, 90)
+position = Vector2(240, 105)
 tipo = 1
 
 [node name="Npc3" parent="." unique_id=710726803 instance=ExtResource("2_hjq4e")]
-position = Vector2(316, 90)
+position = Vector2(343, 105)
 tipo = 2
 
 [node name="Npc" parent="." unique_id=724178508 instance=ExtResource("2_hjq4e")]
-position = Vector2(110, 90)
+position = Vector2(137, 105)

@@ -3,7 +3,7 @@ extends CharacterBody2D
 @export var speed = 100
 
 ## Zona muerta del stick: por debajo de este valor se ignora (evita temblor y drift).
-const ZONA_MUERTA := 0.3
+const ZONA_MUERTA := 0.6
 
 ## Cuánto debe dominar un eje sobre el otro para que el personaje cambie
 ## hacia dónde mira. Evita el parpadeo al caminar en diagonal con el stick.

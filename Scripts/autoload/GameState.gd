@@ -47,3 +47,14 @@ func reiniciar_respuestas() -> void:
 	fortaleza_1 = ""
 	fortaleza_2 = ""
 	objetivo = ""
+
+
+## Pone el foco en el primer botón que encuentre dentro de `raiz`.
+## Con el foco puesto, el D-pad / stick mueven la selección y A (o Enter) la pulsa.
+func enfocar_primer_boton(raiz: Node) -> void:
+	var botones := raiz.find_children("*", "Button", true, false)
+	if botones.is_empty():
+		return
+	var primero := botones[0] as Button
+	primero.grab_focus.call_deferred()
+	

@@ -2,10 +2,10 @@ extends Node2D
 
 ## Interior reutilizable para las 17 áreas: un cuarto con 3 NPC y una salida.
 
-const ANCHO_CUARTO := 426
-const ALTO_CUARTO := 240
+const ANCHO_CUARTO := 480
+const ALTO_CUARTO := 270
 const GROSOR_PARED := 16
-const POSICION_INICIAL_JUGADOR := Vector2(213, 165)
+const POSICION_INICIAL_JUGADOR := Vector2(240, 180)
 
 const ESCENA_MAPA := "res://escenas/mundo/mapa_area.tscn"
 const ESCENA_SELECTOR := "res://escenas/ui/selector_area.tscn"
