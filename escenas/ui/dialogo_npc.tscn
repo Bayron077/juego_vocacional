@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://c02e0rhhiqts8"]
+
+[ext_resource type="Script" uid="uid://c41n05d1v6q5n" path="res://Scripts/ui/dialogo_npc.gd" id="1_oxw50"]
+
+[node name="DialogoNpc" type="CanvasLayer" unique_id=785654911]
+script = ExtResource("1_oxw50")
+
+[node name="Oscurecer" type="ColorRect" parent="." unique_id=819399568]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Marco" type="PanelContainer" parent="." unique_id=1513114201]
+custom_minimum_size = Vector2(300, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margen" type="MarginContainer" parent="Marco" unique_id=199620115]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Caja" type="VBoxContainer" parent="Marco/Margen" unique_id=860564089]
+layout_mode = 2
+
+[node name="Titulo" type="Label" parent="Marco/Margen/Caja" unique_id=700049327]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Lista" type="VBoxContainer" parent="Marco/Margen/Caja" unique_id=1936179793]
+layout_mode = 2

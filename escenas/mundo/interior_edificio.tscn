@@ -1,18 +1,18 @@
 [gd_scene format=3 uid="uid://cu6krj0immywn"]
 
 [ext_resource type="Script" uid="uid://7312cms5sr5v" path="res://Scripts/mundo/interior_edificio.gd" id="1_i2m1x"]
+[ext_resource type="PackedScene" uid="uid://chxk6lbh6vlg8" path="res://escenas/npc/npc.tscn" id="2_hjq4e"]
+[ext_resource type="PackedScene" uid="uid://c02e0rhhiqts8" path="res://escenas/ui/dialogo_npc.tscn" id="2_watrr"]
 
-[node name="InteriorEdificio" type="Control" unique_id=518788178]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lybt7"]
+size = Vector2(60, 20)
+
+[node name="InteriorEdificio" type="Node2D" unique_id=1807787767]
 script = ExtResource("1_i2m1x")
 
+[node name="DialogoNpc" parent="." unique_id=785654911 instance=ExtResource("2_watrr")]
+
 [node name="Fondo" type="ColorRect" parent="." unique_id=874956885]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,37 +20,45 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.46887457, 0.6387938, 0.57249135, 1)
 
-[node name="EtiquetaTitulo" type="Label" parent="." unique_id=1328777743]
-layout_mode = 1
+[node name="CapaUI" type="CanvasLayer" parent="." unique_id=175021582]
+
+[node name="EtiquetaPrompt" type="Label" parent="CapaUI" unique_id=913616280]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="EtiquetaTitulo" type="Label" parent="CapaUI" unique_id=1328777743]
 anchors_preset = 10
 anchor_right = 1.0
+offset_left = -0.5
+offset_right = 0.5
 offset_bottom = 23.0
 grow_horizontal = 2
 horizontal_alignment = 1
 
-[node name="EtiquetaInfo" type="Label" parent="." unique_id=565296754]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+[node name="Salida" type="Area2D" parent="." unique_id=373324969]
+position = Vector2(380, 220)
 
-[node name="BotonSalir" type="Button" parent="." unique_id=737823075]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -61.5
-offset_top = -31.0
-offset_right = 61.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "Volver al mapa"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Salida" unique_id=677109915]
+shape = SubResource("RectangleShape2D_lybt7")
 
-[connection signal="pressed" from="BotonSalir" to="." method="_on_boton_salir_pressed"]
+[node name="Visual" type="ColorRect" parent="Salida" unique_id=1759666306]
+offset_left = -30.0
+offset_top = -10.0
+offset_right = 30.0
+offset_bottom = 10.0
+
+[node name="Npc2" parent="." unique_id=110552784 instance=ExtResource("2_hjq4e")]
+position = Vector2(213, 90)
+tipo = 1
+
+[node name="Npc3" parent="." unique_id=710726803 instance=ExtResource("2_hjq4e")]
+position = Vector2(316, 90)
+tipo = 2
+
+[node name="Npc" parent="." unique_id=724178508 instance=ExtResource("2_hjq4e")]
+position = Vector2(110, 90)

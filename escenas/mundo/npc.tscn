@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://diajkrsoltx2c"]
+
+[ext_resource type="Script" uid="uid://7312cms5sr5v" path="res://Scripts/mundo/interior_edificio.gd" id="1_ijupo"]
+[ext_resource type="PackedScene" uid="uid://chxk6lbh6vlg8" path="res://escenas/npc/npc.tscn" id="2_j3fwa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_agcti"]
+size = Vector2(80, 28)
+
+[node name="InteriorEdificio" type="Node2D" unique_id=1452035030]
+script = ExtResource("1_ijupo")
+
+[node name="Fondo" type="ColorRect" parent="." unique_id=874956885]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 426.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.46887457, 0.6387938, 0.57249135, 1)
+
+[node name="Npc" parent="." unique_id=110552784 instance=ExtResource("2_j3fwa")]
+position = Vector2(100, 90)
+
+[node name="Npc2" parent="." unique_id=411069389 instance=ExtResource("2_j3fwa")]
+position = Vector2(240, 70)
+tipo = 1
+
+[node name="Npc3" parent="." unique_id=2001658510 instance=ExtResource("2_j3fwa")]
+position = Vector2(326, 210)
+tipo = 2
+
+[node name="Salida" type="Area2D" parent="." unique_id=1468591360]
+position = Vector2(213, 222)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Salida" unique_id=346878566]
+shape = SubResource("RectangleShape2D_agcti")
+debug_color = Color(0.9232255, 5.005598e-05, 0.6864834, 0.41960785)
+
+[node name="Visual" type="ColorRect" parent="Salida" unique_id=326517956]
+offset_left = -40.0
+offset_top = -14.0
+offset_right = 40.0
+offset_bottom = 14.0
+
+[node name="CapaUI" type="CanvasLayer" parent="." unique_id=1426312106]
+
+[node name="EtiquetaTitulo" type="Label" parent="CapaUI" unique_id=817636764]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+horizontal_alignment = 1
+
+[node name="EtiquetaPrompt" type="Label" parent="CapaUI" unique_id=1654174839]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
