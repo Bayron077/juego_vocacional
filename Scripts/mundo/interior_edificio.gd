@@ -139,6 +139,8 @@ func _on_decision_tomada(ver_resultados: bool) -> void:
 	else:
 		for i in top.size():
 			print("%d. %s — %d%%" % [i + 1, top[i]["nombre"], top[i]["afinidad"]])
+			
+			
 
 
 func _on_npc_jugador_cerca(npc: Npc) -> void:

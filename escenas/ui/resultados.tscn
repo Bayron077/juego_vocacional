@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bqud44wih7e6g"]
+
+[ext_resource type="Script" uid="uid://bwkrks2ptrewm" path="res://Scripts/ui/resultados.gd" id="1_qm7nt"]
+
+[node name="Resultados" type="Control" unique_id=1897819414]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qm7nt")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2109717844]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.11682051, 0, 0.93308413, 1)
