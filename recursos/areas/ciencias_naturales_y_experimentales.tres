@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://dgoyay781uvwb"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_ecfrc"]
+
+[resource]
+script = ExtResource("1_ecfrc")
+nombre_area = "Ciencias naturales y experimentales"
+nombre_edificio = "Edificio de Ciencias Naturales"
+color_zona = Color(0.019402757, 0.28346765, 0.24253342, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"

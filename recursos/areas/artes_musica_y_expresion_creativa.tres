@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://buuvi1vw2gha1"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_fnp5e"]
+
+[resource]
+script = ExtResource("1_fnp5e")
+nombre_area = "Artes, música y expresión creativa"
+nombre_edificio = "Edificio de Artes"
+color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"

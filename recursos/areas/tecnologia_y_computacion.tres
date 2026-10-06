@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_sf1sk")
-nombre_area = "Tecnologia y Computacion "
-nombre_edificio = "Facultad de ingenieria"
-color_zona = Color(0.2, 0.2, 0.46666667, 0.8666667)
+nombre_area = "Tecnología y computación"
+nombre_edificio = "Edificio de Tecnologia"
+color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
 metadata/_custom_type_script = "uid://bn78viljt76hy"

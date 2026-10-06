@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://b03wnt1mujafo"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_jytqv"]
+
+[resource]
+script = ExtResource("1_jytqv")
+nombre_area = "Turismo, cultura y servicios"
+nombre_edificio = "Edificio de Turismo"
+color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"

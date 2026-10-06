@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://7312cms5sr5v" path="res://Scripts/mundo/interior_edificio.gd" id="1_i2m1x"]
 [ext_resource type="PackedScene" uid="uid://chxk6lbh6vlg8" path="res://escenas/npc/npc.tscn" id="2_hjq4e"]
 [ext_resource type="PackedScene" uid="uid://c02e0rhhiqts8" path="res://escenas/ui/dialogo_npc.tscn" id="2_watrr"]
+[ext_resource type="Texture2D" uid="uid://dvw37bjbmu5kq" path="res://assets/npc_1.png" id="4_m5sqb"]
+[ext_resource type="Texture2D" uid="uid://cp7bur86yc3c4" path="res://assets/npc_2.png" id="5_lcvl1"]
+[ext_resource type="Texture2D" uid="uid://c4nekimsdf1jh" path="res://assets/npc_3.png" id="6_7lhjm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lybt7"]
 size = Vector2(60, 20)
@@ -57,10 +60,14 @@ offset_bottom = 10.0
 [node name="Npc2" parent="." unique_id=110552784 instance=ExtResource("2_hjq4e")]
 position = Vector2(240, 105)
 tipo = 1
+textura = ExtResource("4_m5sqb")
 
 [node name="Npc3" parent="." unique_id=710726803 instance=ExtResource("2_hjq4e")]
 position = Vector2(343, 105)
 tipo = 2
+textura = ExtResource("5_lcvl1")
+cuadros = 8
 
 [node name="Npc" parent="." unique_id=724178508 instance=ExtResource("2_hjq4e")]
 position = Vector2(137, 105)
+textura = ExtResource("6_7lhjm")

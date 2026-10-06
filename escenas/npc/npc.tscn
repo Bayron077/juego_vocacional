@@ -20,11 +20,15 @@ offset_right = 12.0
 position = Vector2(0, -5)
 shape = SubResource("RectangleShape2D_lybt7")
 
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1394405850]
+position = Vector2(0, -32)
+hframes = 9
+
 [node name="Etiqueta" type="Label" parent="." unique_id=1402809023]
 offset_left = -30.0
-offset_top = -54.0
+offset_top = -82.0
 offset_right = 30.0
-offset_bottom = -5.0
+offset_bottom = -33.0
 text = "NPC
 "
 horizontal_alignment = 1

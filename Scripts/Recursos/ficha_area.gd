@@ -10,7 +10,7 @@ extends  Resource
 @export var color_zona: Color = Color(0.5, 0.5, 0.5, 1)
 
 ## Dónde aparece el jugador al entrar al mapa de esta área.
-@export var posicion_jugador_inicial: Vector2 = Vector2(100, 220)
+@export var posicion_jugador_inicial: Vector2 = Vector2(320, 260)
 
 ## Dónde se dibuja el edificio (y su zona de entrada) dentro del mapa.
 @export var posicion_edificio: Vector2 = Vector2(450, 150)

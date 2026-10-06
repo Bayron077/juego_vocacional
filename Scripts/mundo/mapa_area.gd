@@ -1,8 +1,8 @@
 extends Node2D
 
 ## Tamaño del mundo jugable de cada área (en píxeles).
-const ANCHO_MUNDO := 640
-const ALTO_MUNDO := 360
+const ANCHO_MUNDO := 640.0
+const ALTO_MUNDO := 360.0
 
 ## Carpeta donde viven las fichas de datos de cada área.
 const RUTA_FICHAS := "res://recursos/areas/"
@@ -32,6 +32,10 @@ const FICHAS_POR_AREA := {
 const ESCENA_PERSONAJE_MASCULINO: PackedScene = preload("res://personajes/player_levy.tscn")
 const ESCENA_PERSONAJE_FEMENINO: PackedScene = preload("res://personajes/Eda.tscn")
 const ESCENA_INTERIOR := "res://escenas/mundo/interior_edificio.tscn"
+
+## Al volver del interior, el jugador aparece a esta distancia de la posición del edificio
+## (justo debajo de la zona de entrada).
+const DESPLAZAMIENTO_REGRESO := Vector2(0, 65)
 
 var ficha: FichaArea
 var jugador: CharacterBody2D
@@ -76,7 +80,12 @@ func _instanciar_jugador() -> void:
 		escena_personaje = ESCENA_PERSONAJE_FEMENINO
 
 	jugador = escena_personaje.instantiate()
-	jugador.position = ficha.posicion_jugador_inicial
+	if GameState.regreso_de_interior:
+		# Viene de salir del edificio: aparece frente a la puerta.
+		jugador.position = ficha.posicion_edificio + DESPLAZAMIENTO_REGRESO
+		GameState.regreso_de_interior = false
+	else:
+		jugador.position = ficha.posicion_jugador_inicial
 	add_child(jugador)
 
 	camara = jugador.get_node("Camera2D")
@@ -85,6 +94,7 @@ func _instanciar_jugador() -> void:
 	camara.limit_top = 0
 	camara.limit_right = ANCHO_MUNDO
 	camara.limit_bottom = ALTO_MUNDO
+	print("Regreso de interior: ", GameState.regreso_de_interior, " | posición jugador: ", jugador.position)
 
 
 ## Pinta el mundo con los datos de la ficha: color, posición del edificio y su nombre.
@@ -98,6 +108,8 @@ func _aplicar_ficha_al_mundo() -> void:
 ## Mientras el jugador esté en la zona de entrada, ENTER/Espacio
 ## (o el botón A del mando) lo manda al interior del edificio.
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_echo():
+		return
 	if jugador_en_zona_edificio and event.is_action_pressed("ui_accept"):
 		GameState.ir_a_escena(ESCENA_INTERIOR)
 
@@ -112,3 +124,5 @@ func _on_area_entrada_body_exited(body: Node) -> void:
 	if body == jugador:
 		jugador_en_zona_edificio = false
 		etiqueta_prompt.visible = false
+		
+		

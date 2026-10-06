@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://42nkvtqtmh0w"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_htl7s"]
+
+[resource]
+script = ExtResource("1_htl7s")
+nombre_area = "Medio ambiente y sostenibilidad"
+nombre_edificio = "Edificio de Medio Ambiente"
+color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"

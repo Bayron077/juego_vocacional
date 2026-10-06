@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://dsye38lwf845o"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_te46y"]
+
+[resource]
+script = ExtResource("1_te46y")
+nombre_area = "Salud y cuidado"
+nombre_edificio = "Edificio de Salud"
+color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FichaArea" format=3 uid="uid://ccr2wuncjadt1"]
+
+[ext_resource type="Script" uid="uid://bn78viljt76hy" path="res://Scripts/Recursos/ficha_area.gd" id="1_83paq"]
+
+[resource]
+script = ExtResource("1_83paq")
+nombre_area = "Electricidad, electrónica y automatización"
+nombre_edificio = "Edificio de Electricidad"
+color_zona = Color(0.4148564, 6.336413e-05, 0.3814722, 0.8666667)
+metadata/_custom_type_script = "uid://bn78viljt76hy"
