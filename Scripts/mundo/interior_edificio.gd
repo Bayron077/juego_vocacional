@@ -183,7 +183,7 @@ func _abrir_reto() -> void:
 	var reto := Reto.new()
 	add_child(reto)
 	reto.terminado.connect(_on_reto_terminado)
-	reto.iniciar(tipo, titulo, texto)
+	reto.iniciar(tipo, titulo, texto, _ficha)
 
 
 func _on_reto_terminado(completado: bool) -> void:

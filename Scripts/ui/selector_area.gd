@@ -22,6 +22,7 @@ var areas_interes: Array[String] = [
 ]
 
 func _ready() -> void:
+	$ContenedorScroll.offset_bottom = 0.0
 	for area in areas_interes:
 		var boton := Button.new()
 		boton.text = area
