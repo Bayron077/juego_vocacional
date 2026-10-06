@@ -7,4 +7,6 @@ script = ExtResource("1_htl7s")
 nombre_area = "Medio ambiente y sostenibilidad"
 nombre_edificio = "Edificio de Medio Ambiente"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+titulo_reto = "Ciclo de reciclaje"
+texto_reto = "Memoriza el orden de los contenedores y repítelo con la cruceta."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

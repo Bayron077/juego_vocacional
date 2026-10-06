@@ -7,4 +7,6 @@ script = ExtResource("1_egwcg")
 nombre_area = "Sociedad, cultura y humanidades"
 nombre_edificio = "Edificio de Humanidades"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+titulo_reto = "Línea del tiempo"
+texto_reto = "Memoriza el orden de los hechos y repítelo con la cruceta."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

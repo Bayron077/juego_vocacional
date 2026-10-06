@@ -7,4 +7,6 @@ script = ExtResource("1_83paq")
 nombre_area = "Electricidad, electrónica y automatización"
 nombre_edificio = "Edificio de Electricidad"
 color_zona = Color(0.4148564, 6.336413e-05, 0.3814722, 0.8666667)
+titulo_reto = "Conecta el circuito"
+texto_reto = "Memoriza el orden de las conexiones y repítelo con la cruceta."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

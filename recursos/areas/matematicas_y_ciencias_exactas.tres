@@ -7,4 +7,6 @@ script = ExtResource("1_dp4r7")
 nombre_area = "Matemáticas y ciencias exactas"
 nombre_edificio = "Edificio de Matematicas"
 color_zona = Color(0.2, 0.2, 0.46666667, 0.8666667)
+titulo_reto = "Descifra el patrón"
+texto_reto = "Observa la secuencia de flechas y repítela en el mismo orden."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

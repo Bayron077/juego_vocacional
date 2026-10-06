@@ -7,4 +7,6 @@ script = ExtResource("1_hddtb")
 nombre_area = "Educación y enseñanza"
 nombre_edificio = "Edificio de Educación"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+titulo_reto = "Prepara la clase"
+texto_reto = "Memoriza el orden de la actividad y repítelo para guiar a tus estudiantes."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

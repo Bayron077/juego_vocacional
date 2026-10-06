@@ -7,4 +7,6 @@ script = ExtResource("1_jytqv")
 nombre_area = "Turismo, cultura y servicios"
 nombre_edificio = "Edificio de Turismo"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+titulo_reto = "Ruta turística"
+texto_reto = "Memoriza el orden de las paradas y repítelo con la cruceta."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

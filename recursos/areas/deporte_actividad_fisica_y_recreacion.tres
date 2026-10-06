@@ -7,4 +7,7 @@ script = ExtResource("1_qsfb8")
 nombre_area = "Deporte, actividad física y recreación"
 nombre_edificio = "Edificio de Deportes"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+tipo_reto = 1
+titulo_reto = "Tiro perfecto"
+texto_reto = "Pulsa A en el momento justo, con la barra en la zona verde, para encestar."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

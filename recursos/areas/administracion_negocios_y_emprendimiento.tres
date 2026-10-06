@@ -7,4 +7,6 @@ script = ExtResource("1_daju8")
 nombre_area = "Administración, negocios y emprendimiento"
 nombre_edificio = "Edificio de Administración"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+titulo_reto = "Plan de negocio"
+texto_reto = "Memoriza los pasos de tu plan y repítelos en orden con la cruceta."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

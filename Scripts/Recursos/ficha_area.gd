@@ -14,3 +14,8 @@ extends  Resource
 
 ## Dónde se dibuja el edificio (y su zona de entrada) dentro del mapa.
 @export var posicion_edificio: Vector2 = Vector2(450, 150)
+enum TipoReto { SECUENCIA, TIMING }
+
+@export var tipo_reto: TipoReto = TipoReto.SECUENCIA
+@export var titulo_reto: String = "Reto del área"
+@export_multiline var texto_reto: String = "Supera el reto para ganar el sello de esta área."

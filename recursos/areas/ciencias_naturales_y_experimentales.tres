@@ -7,4 +7,7 @@ script = ExtResource("1_ecfrc")
 nombre_area = "Ciencias naturales y experimentales"
 nombre_edificio = "Edificio de Ciencias Naturales"
 color_zona = Color(0.019402757, 0.28346765, 0.24253342, 0.8666667)
+tipo_reto = 1
+titulo_reto = "Mezcla en el punto exacto"
+texto_reto = "Detén la barra en la zona verde para completar el experimento. Pulsa A."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

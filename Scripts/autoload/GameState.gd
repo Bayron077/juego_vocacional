@@ -20,7 +20,15 @@ var objetivo: String = ""
 var regreso_de_interior: bool = false
 
 var _segundos_inactivo: float = 0.0
+# Sellos ganados en los retos (uno por área, sin repetir)
+var sellos: Array[String] = []
 
+func agregar_sello(area: String) -> void:
+	if not sellos.has(area):
+		sellos.append(area)
+
+func tiene_sello(area: String) -> bool:
+	return sellos.has(area)
 
 func _ready() -> void:
 	# Debe seguir contando aunque el juego esté en pausa (diálogo abierto).
@@ -98,6 +106,7 @@ func reiniciar_respuestas() -> void:
 	fortaleza_1 = ""
 	fortaleza_2 = ""
 	objetivo = ""
+	sellos.clear()
 
 
 ## Pone el foco en el primer botón que encuentre dentro de `raiz`.

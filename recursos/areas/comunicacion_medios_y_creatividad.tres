@@ -7,4 +7,8 @@ script = ExtResource("1_byh4l")
 nombre_area = "Comunicación, medios y creatividad"
 nombre_edificio = "Edificio de Comunicaciones"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+tipo_reto = 1
+titulo_reto = "La toma perfecta"
+texto_reto = "Pulsa A cuando la barra esté en la zona verde para capturar la toma.
+"
 metadata/_custom_type_script = "uid://bn78viljt76hy"

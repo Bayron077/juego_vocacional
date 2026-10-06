@@ -7,4 +7,6 @@ script = ExtResource("1_fnp5e")
 nombre_area = "Artes, música y expresión creativa"
 nombre_edificio = "Edificio de Artes"
 color_zona = Color(0.111851715, 0, 0.72027737, 0.8666667)
+titulo_reto = "Repite la melodía"
+texto_reto = "Escucha con los ojos: memoriza las flechas y repite la melodía con la cruceta."
 metadata/_custom_type_script = "uid://bn78viljt76hy"

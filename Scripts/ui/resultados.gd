@@ -40,6 +40,20 @@ func _construir(top: Array) -> void:
 	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(titulo)
 
+	# Sellos ganados en los retos (una sola línea; si no cabe, se corta con "…").
+	if not GameState.sellos.is_empty():
+		var texto_sellos := "★ %d sello(s): %s" % [
+			GameState.sellos.size(),
+			" · ".join(PackedStringArray(GameState.sellos))
+		]
+		var sellos := _crear_etiqueta(texto_sellos, TAM_TEXTO)
+		sellos.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		sellos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sellos.clip_text = true
+		sellos.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		sellos.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2))
+		caja.add_child(sellos)
+
 	var fila := HBoxContainer.new()
 	fila.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	fila.add_theme_constant_override("separation", 5)
