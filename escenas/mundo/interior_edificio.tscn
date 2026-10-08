@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://7312cms5sr5v" path="res://Scripts/mundo/interior_edificio.gd" id="1_i2m1x"]
 [ext_resource type="PackedScene" uid="uid://chxk6lbh6vlg8" path="res://escenas/npc/npc.tscn" id="2_hjq4e"]
+[ext_resource type="Texture2D" uid="uid://qnogrwr2r5x1" path="res://assets/fondos/fondo_interior.png" id="2_lcvl1"]
 [ext_resource type="PackedScene" uid="uid://c02e0rhhiqts8" path="res://escenas/ui/dialogo_npc.tscn" id="2_watrr"]
 [ext_resource type="Texture2D" uid="uid://dvw37bjbmu5kq" path="res://assets/npc_1.png" id="4_m5sqb"]
 [ext_resource type="Texture2D" uid="uid://cp7bur86yc3c4" path="res://assets/npc_2.png" id="5_lcvl1"]
@@ -13,17 +14,11 @@ size = Vector2(60, 20)
 [node name="InteriorEdificio" type="Node2D" unique_id=1807787767]
 script = ExtResource("1_i2m1x")
 
-[node name="DialogoNpc" parent="." unique_id=785654911 instance=ExtResource("2_watrr")]
+[node name="Fondo" type="Sprite2D" parent="." unique_id=160422170]
+texture = ExtResource("2_lcvl1")
+centered = false
 
-[node name="Fondo" type="ColorRect" parent="." unique_id=874956885]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 480.0
-offset_bottom = 270.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.46887457, 0.6387938, 0.57249135, 1)
+[node name="DialogoNpc" parent="." unique_id=785654911 instance=ExtResource("2_watrr")]
 
 [node name="CapaUI" type="CanvasLayer" parent="." unique_id=175021582]
 

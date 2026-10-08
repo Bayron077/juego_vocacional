@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bm7xhla8soisn"]
 
 [ext_resource type="Script" uid="uid://pmwey648h7p" path="res://Scripts/ui/SeleccionPersonaje.gd" id="1_8t6pw"]
+[ext_resource type="Script" uid="uid://d01nexwnjrum3" path="res://Scripts/ui/fondo_plaza.gd" id="2_4bi7l"]
 
 [sub_resource type="Theme" id="Theme_lybt7"]
 
@@ -13,14 +14,12 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8t6pw")
 
-[node name="Fondo" type="ColorRect" parent="." unique_id=2066066291]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 0.33999997, 0.33999997, 1)
+[node name="FondoPlaza" type="TextureRect" parent="." unique_id=1729917214]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_4bi7l")
+metadata/_custom_type_script = "uid://d01nexwnjrum3"
 
 [node name="Label" type="Label" parent="." unique_id=1900371784]
 layout_mode = 1

@@ -7,9 +7,30 @@ const ANCHO_CUARTO := 480
 const ALTO_CUARTO := 270
 const GROSOR_PARED := 16
 const POSICION_INICIAL_JUGADOR := Vector2(240, 180)
-## Dónde está la mesa del reto. Si estorba con la salida u otro objeto, cámbiala aquí.
-const POSICION_MESA_RETO := Vector2(430, 135)
+## Dónde está la mesa del reto: centrada sobre la mesa y la alfombra del dibujo.
+const POSICION_MESA_RETO := Vector2(405, 172)
+## Zona de salida, sobre el tapete con la flecha del dibujo.
+const POSICION_SALIDA := Vector2(415, 255)
 const RUTA_FICHAS := "res://recursos/areas/"
+
+## Muebles del dibujo que bloquean el paso (coordenadas del cuarto, 480x270).
+## Si el jugador atraviesa algo o se atora sin motivo, ajusta estos rectángulos
+## (x, y, ancho, alto). Para verlos: menú Depurar > Formas de colisión visibles.
+const OBSTACULOS: Array[Rect2] = [
+	Rect2(0, 0, 480, 88),       # pared del fondo (ventanas, pizarrón, estantes)
+	Rect2(0, 86, 34, 40),       # lavamanos, esquina izquierda
+	Rect2(0, 123, 84, 76),      # mesón de laboratorio y estantes
+	Rect2(106, 86, 38, 15),     # mueble bajo junto a la planta
+	Rect2(84, 172, 24, 27),     # maceta del lado izquierdo
+	Rect2(0, 208, 64, 62),      # plantas de la esquina inferior izquierda
+	Rect2(58, 230, 70, 40),     # escritorio pequeño y dispensador de agua
+	Rect2(362, 86, 36, 15),     # cajas arriba a la derecha
+	Rect2(397, 86, 53, 30),     # escritorio con computador
+	Rect2(408, 100, 28, 28),    # silla
+	Rect2(450, 86, 30, 72),     # estante de la derecha
+	Rect2(458, 160, 22, 56),    # cajas del lado derecho
+	Rect2(384, 154, 44, 36),    # mesa del reto
+]
 
 const ESCENA_MAPA := "res://escenas/mundo/mapa_area.tscn"
 const ESCENA_SELECTOR := "res://escenas/ui/selector_area.tscn"
@@ -17,8 +38,9 @@ const ESCENA_RESULTADOS := "res://escenas/ui/resultados.tscn"
 const ESCENA_PERSONAJE_MASCULINO: PackedScene = preload("res://personajes/player_levy.tscn")
 const ESCENA_PERSONAJE_FEMENINO: PackedScene = preload("res://personajes/Eda.tscn")
 
-const COLOR_MESA_PENDIENTE := Color(1.0, 0.8, 0.2)
-const COLOR_MESA_COMPLETA := Color(0.4, 0.7, 0.4)
+## Resplandor sobre la mesa del dibujo: dorado = pendiente, verde = sello ganado.
+const COLOR_MESA_PENDIENTE := Color(1.0, 0.8, 0.2, 0.35)
+const COLOR_MESA_COMPLETA := Color(0.4, 0.8, 0.4, 0.35)
 
 var jugador: CharacterBody2D
 var npc_cercano: Npc = null
@@ -36,6 +58,7 @@ var _visual_mesa: ColorRect
 
 func _ready() -> void:
 	_crear_paredes()
+	_ubicar_salida()
 	# La mesa se crea ANTES del jugador para que el jugador se dibuje encima de ella.
 	_crear_mesa_reto()
 	_instanciar_jugador()
@@ -56,7 +79,15 @@ func _ready() -> void:
 			hijo.jugador_lejos.connect(_on_npc_jugador_lejos)
 
 
-## Crea las 4 paredes invisibles alrededor del cuarto para que el jugador no salga.
+## Coloca la zona de salida sobre el tapete del dibujo y oculta el rectángulo de prueba.
+func _ubicar_salida() -> void:
+	salida.position = POSICION_SALIDA
+	var visual := salida.get_node_or_null("Visual")
+	if visual != null:
+		visual.visible = false
+
+
+## Crea las paredes invisibles alrededor del cuarto y las colisiones de los muebles.
 func _crear_paredes() -> void:
 	var rectangulos: Array[Rect2] = [
 		Rect2(-GROSOR_PARED, -GROSOR_PARED, ANCHO_CUARTO + GROSOR_PARED * 2, GROSOR_PARED), # arriba
@@ -64,6 +95,7 @@ func _crear_paredes() -> void:
 		Rect2(-GROSOR_PARED, 0, GROSOR_PARED, ALTO_CUARTO), # izquierda
 		Rect2(ANCHO_CUARTO, 0, GROSOR_PARED, ALTO_CUARTO), # derecha
 	]
+	rectangulos.append_array(OBSTACULOS)
 	for rect in rectangulos:
 		var cuerpo := StaticBody2D.new()
 		var colision := CollisionShape2D.new()
@@ -87,16 +119,15 @@ func _buscar_ficha() -> FichaArea:
 			continue
 		var ficha := load(RUTA_FICHAS + archivo) as FichaArea
 		if ficha == null:
-			print("RETO: no se pudo cargar ", archivo)
 			continue
 		if _normalizar(ficha.nombre_area) == buscado:
-			print("RETO: ficha encontrada -> ", archivo, " | tipo=", ficha.tipo_reto, " | titulo=", ficha.titulo_reto)
 			return ficha
-	print("RETO: NO se encontró ficha para '", GameState.area_elegida, "'")
+	push_warning("No se encontró ficha para el área '%s'." % GameState.area_elegida)
 	return null
 
 
-## Crea por código la mesa del reto: un bloque dorado con su zona de interacción.
+## Crea por código la zona de la mesa del reto: un resplandor sobre la mesa del dibujo
+## con su zona de interacción (más grande que la mesa, que es sólida).
 func _crear_mesa_reto() -> void:
 	_ficha = _buscar_ficha()
 
@@ -105,19 +136,20 @@ func _crear_mesa_reto() -> void:
 
 	var colision := CollisionShape2D.new()
 	var forma := RectangleShape2D.new()
-	forma.size = Vector2(36, 24)
+	forma.size = Vector2(68, 52)
 	colision.shape = forma
 	mesa.add_child(colision)
 
 	_visual_mesa = ColorRect.new()
-	_visual_mesa.size = Vector2(36, 24)
+	_visual_mesa.size = Vector2(44, 34)
 	_visual_mesa.position = -_visual_mesa.size / 2.0
+	_visual_mesa.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mesa.add_child(_visual_mesa)
 
 	var etiqueta := Label.new()
 	etiqueta.text = "Reto"
 	etiqueta.add_theme_font_size_override("font_size", 8)
-	etiqueta.position = Vector2(-12, -26)
+	etiqueta.position = Vector2(-12, -38)
 	mesa.add_child(etiqueta)
 
 	add_child(mesa)
@@ -270,7 +302,6 @@ func _on_salida_body_exited(body: Node) -> void:
 
 
 func _on_mesa_body_entered(body: Node) -> void:
-	print("RETO: algo entró a la mesa -> ", body.name)
 	if body == jugador:
 		jugador_en_mesa_reto = true
 		_actualizar_prompt()

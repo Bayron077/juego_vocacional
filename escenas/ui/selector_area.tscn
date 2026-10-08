@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dfuvh5clbaqp2"]
 
 [ext_resource type="Script" uid="uid://bw7ab6cwcdjw2" path="res://Scripts/ui/selector_area.gd" id="1_2f8de"]
+[ext_resource type="Script" uid="uid://d01nexwnjrum3" path="res://Scripts/ui/fondo_plaza.gd" id="2_t6efy"]
 
 [node name="SelectorArea" type="Control" unique_id=802171663]
 layout_mode = 3
@@ -11,14 +12,12 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2f8de")
 
-[node name="Fondo" type="ColorRect" parent="." unique_id=1839473563]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.597, 1, 0.22000003, 1)
+[node name="FondoPlaza" type="TextureRect" parent="." unique_id=528522623]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_t6efy")
+metadata/_custom_type_script = "uid://d01nexwnjrum3"
 
 [node name="Titulo" type="Label" parent="." unique_id=811346076]
 layout_mode = 1
@@ -26,7 +25,6 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 23.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(0.051970966, 0.05197096, 0.05197095, 1)
 text = "Elige tu area de interes"
 horizontal_alignment = 1
 
