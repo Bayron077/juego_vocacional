@@ -37,6 +37,11 @@ const ESCENA_INTERIOR := "res://escenas/mundo/interior_edificio.tscn"
 ## de la posición del edificio, justo debajo de la zona de entrada.
 const DESPLAZAMIENTO_REGRESO := Vector2(0, 65)
 
+## Tamaño del personaje en el mapa. 1.0 = tamaño original. Con 0.8 se ve un
+## poco más pequeño y encaja mejor con los edificios; sube o baja este número
+## (por ejemplo 0.75 o 0.85) hasta que te guste.
+const ESCALA_JUGADOR := 0.8
+
 var ficha: FichaArea
 ## Datos del mapa con arte (de DatosMapas). Vacío si esta área aún no tiene arte.
 var datos_arte: Dictionary = {}
@@ -95,6 +100,7 @@ func _instanciar_jugador() -> void:
 	else:
 		jugador.position = datos_arte.get("inicio", ficha.posicion_jugador_inicial)
 	add_child(jugador)
+	_reducir_jugador()
 
 	camara = jugador.get_node("Camera2D")
 	camara.make_current()
@@ -104,14 +110,24 @@ func _instanciar_jugador() -> void:
 	camara.limit_bottom = ALTO_MUNDO
 
 
+## Achica solo el dibujo y el cuadro de colisión del personaje (no el nodo entero,
+## para no afectar a la cámara ni a la física). El dibujo y la colisión se achican juntos, así los pies siguen alineados.
+func _reducir_jugador() -> void:
+	var sprite: Sprite2D = jugador.get_node("Sprite2D")
+	sprite.scale = Vector2.ONE * ESCALA_JUGADOR
+	var colision: CollisionShape2D = jugador.get_node("CollisionShape2D")
+	colision.scale = Vector2.ONE * ESCALA_JUGADOR
+	colision.position *= ESCALA_JUGADOR
+
+
 ## Pinta el mundo con los datos de la ficha. Con arte: imagen, edificio dibujado,
-## colisiones y rótulo; sin arte: el bloque de color de siempre.
+## colisiones; sin arte: el bloque de color de siempre.
 func _aplicar_ficha_al_mundo() -> void:
-	etiqueta_edificio.text = ficha.nombre_edificio
+	# El nombre del edificio ya no se escribe sobre el mapa.
+	etiqueta_edificio.visible = false
 	if datos_arte.is_empty():
 		fondo.color = ficha.color_zona
 		edificio.position = ficha.posicion_edificio
-		etiqueta_edificio.position = ficha.posicion_edificio + Vector2(-50, -90)
 		return
 	_aplicar_arte()
 
@@ -136,14 +152,6 @@ func _aplicar_arte() -> void:
 	_crear_colision_poligono(datos_arte["huella"])
 	for rect in datos_arte["obstaculos"]:
 		_crear_colision_rect(rect)
-
-	# Rótulo del edificio, centrado sobre la fachada y con contorno para leerse bien.
-	etiqueta_edificio.add_theme_font_size_override("font_size", 8)
-	etiqueta_edificio.add_theme_color_override("font_outline_color", Color(0.05, 0.08, 0.2))
-	etiqueta_edificio.add_theme_constant_override("outline_size", 3)
-	etiqueta_edificio.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	etiqueta_edificio.custom_minimum_size = Vector2(180, 0)
-	etiqueta_edificio.position = edificio.position + Vector2(-90, -48)
 
 
 func _crear_colision_rect(rect: Rect2) -> void:

@@ -38,9 +38,14 @@ const ESCENA_RESULTADOS := "res://escenas/ui/resultados.tscn"
 const ESCENA_PERSONAJE_MASCULINO: PackedScene = preload("res://personajes/player_levy.tscn")
 const ESCENA_PERSONAJE_FEMENINO: PackedScene = preload("res://personajes/Eda.tscn")
 
-## Resplandor sobre la mesa del dibujo: dorado = pendiente, verde = sello ganado.
-const COLOR_MESA_PENDIENTE := Color(1.0, 0.8, 0.2, 0.35)
-const COLOR_MESA_COMPLETA := Color(0.4, 0.8, 0.4, 0.35)
+## Aspecto de la mesa del reto: dorado y llamativo mientras está pendiente,
+## verde y tranquilo cuando ya se ganó el sello.
+const COLOR_ORO := Color(1.0, 0.82, 0.2)
+const COLOR_ORO_BORDE := Color(0.45, 0.22, 0.0)
+const COLOR_VERDE := Color(0.45, 0.9, 0.5)
+const COLOR_VERDE_BORDE := Color(0.05, 0.3, 0.1)
+## Tamaño de letra del rótulo sobre la mesa (la fuente Jersey 15 se ve bien en múltiplos de 15).
+const TAM_ROTULO := 15
 
 var jugador: CharacterBody2D
 var npc_cercano: Npc = null
@@ -48,7 +53,12 @@ var jugador_en_salida: bool = false
 var jugador_en_mesa_reto: bool = false
 
 var _ficha: FichaArea = null
-var _visual_mesa: ColorRect
+var _aura: Polygon2D
+var _marcador: Node2D
+var _flecha: Node2D
+var _rotulo_mesa: Label
+var _chispas: CPUParticles2D
+var _animaciones: Array[Tween] = []
 
 @onready var salida: Area2D = $Salida
 @onready var dialogo: DialogoNpc = $DialogoNpc
@@ -126,8 +136,8 @@ func _buscar_ficha() -> FichaArea:
 	return null
 
 
-## Crea por código la zona de la mesa del reto: un resplandor sobre la mesa del dibujo
-## con su zona de interacción (más grande que la mesa, que es sólida).
+## Crea por código la mesa del reto: una zona de interacción (más grande que la mesa,
+## que es sólida) con un aura, una flecha que rebota, un rótulo y chispas.
 func _crear_mesa_reto() -> void:
 	_ficha = _buscar_ficha()
 
@@ -140,17 +150,56 @@ func _crear_mesa_reto() -> void:
 	colision.shape = forma
 	mesa.add_child(colision)
 
-	_visual_mesa = ColorRect.new()
-	_visual_mesa.size = Vector2(44, 34)
-	_visual_mesa.position = -_visual_mesa.size / 2.0
-	_visual_mesa.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	mesa.add_child(_visual_mesa)
+	# Aura: una elipse luminosa sobre la mesa que late.
+	_aura = Polygon2D.new()
+	_aura.polygon = _elipse(34.0, 20.0)
+	_aura.position = Vector2(0, 2)
+	mesa.add_child(_aura)
 
-	var etiqueta := Label.new()
-	etiqueta.text = "Reto"
-	etiqueta.add_theme_font_size_override("font_size", 8)
-	etiqueta.position = Vector2(-12, -38)
-	mesa.add_child(etiqueta)
+	# Chispas que suben desde la mesa.
+	_chispas = CPUParticles2D.new()
+	_chispas.position = Vector2(0, 4)
+	_chispas.amount = 10
+	_chispas.lifetime = 1.4
+	_chispas.preprocess = 1.4
+	_chispas.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	_chispas.emission_rect_extents = Vector2(22, 6)
+	_chispas.direction = Vector2(0, -1)
+	_chispas.spread = 15.0
+	_chispas.gravity = Vector2.ZERO
+	_chispas.initial_velocity_min = 12.0
+	_chispas.initial_velocity_max = 22.0
+	_chispas.scale_amount_min = 1.5
+	_chispas.scale_amount_max = 2.5
+	var degradado := Gradient.new()
+	degradado.set_color(0, Color(1.0, 0.95, 0.55, 1.0))
+	degradado.set_color(1, Color(1.0, 0.7, 0.1, 0.0))
+	_chispas.color_ramp = degradado
+	mesa.add_child(_chispas)
+
+	# Marcador sobre la mesa: flecha dorada + rótulo. Sube y baja suavemente.
+	_marcador = Node2D.new()
+	_marcador.position = Vector2(0, -26)
+	mesa.add_child(_marcador)
+
+	_flecha = Node2D.new()
+	_marcador.add_child(_flecha)
+	var contorno := Polygon2D.new()
+	contorno.name = "Contorno"
+	contorno.polygon = _puntos_flecha(1.0)
+	_flecha.add_child(contorno)
+	var relleno := Polygon2D.new()
+	relleno.name = "Relleno"
+	relleno.polygon = _puntos_flecha(0.0)
+	_flecha.add_child(relleno)
+
+	_rotulo_mesa = Label.new()
+	_rotulo_mesa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_rotulo_mesa.custom_minimum_size = Vector2(80, 0)
+	_rotulo_mesa.position = Vector2(-40, -22)
+	_rotulo_mesa.add_theme_font_size_override("font_size", TAM_ROTULO)
+	_rotulo_mesa.add_theme_constant_override("outline_size", 4)
+	_marcador.add_child(_rotulo_mesa)
 
 	add_child(mesa)
 	mesa.body_entered.connect(_on_mesa_body_entered)
@@ -158,11 +207,68 @@ func _crear_mesa_reto() -> void:
 	_actualizar_mesa()
 
 
+## Puntos de una elipse (para el aura).
+func _elipse(radio_x: float, radio_y: float) -> PackedVector2Array:
+	var puntos := PackedVector2Array()
+	for i in 28:
+		var ang := TAU * float(i) / 28.0
+		puntos.append(Vector2(cos(ang) * radio_x, sin(ang) * radio_y))
+	return puntos
+
+
+## Flecha que apunta hacia abajo. "margen" la agranda para dibujar el contorno.
+func _puntos_flecha(margen: float) -> PackedVector2Array:
+	var m := margen
+	return PackedVector2Array([
+		Vector2(-4 - m, -9 - m), Vector2(4 + m, -9 - m), Vector2(4 + m, -3 - m),
+		Vector2(8 + m, -3 - m), Vector2(0, 7 + m), Vector2(-8 - m, -3 - m),
+		Vector2(-4 - m, -3 - m),
+	])
+
+
+## Hace oscilar una propiedad entre dos valores sin parar.
+func _oscilar(objeto: Object, propiedad: NodePath, desde: Variant, hasta: Variant, segundos: float) -> void:
+	var anim := create_tween().set_loops()
+	anim.tween_property(objeto, propiedad, hasta, segundos).from(desde) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	anim.tween_property(objeto, propiedad, desde, segundos) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_animaciones.append(anim)
+
+
+## Cambia el aspecto de la mesa según el reto esté pendiente o ya superado.
 func _actualizar_mesa() -> void:
-	if GameState.tiene_sello(GameState.area_elegida):
-		_visual_mesa.color = COLOR_MESA_COMPLETA
-	else:
-		_visual_mesa.color = COLOR_MESA_PENDIENTE
+	for anim in _animaciones:
+		anim.kill()
+	_animaciones.clear()
+	# Deja todo en su posición de reposo antes de volver a animar.
+	_aura.modulate.a = 1.0
+	_aura.scale = Vector2.ONE
+	_marcador.position.y = -26.0
+
+	var completo := GameState.tiene_sello(GameState.area_elegida)
+	var color := COLOR_VERDE if completo else COLOR_ORO
+	var borde := COLOR_VERDE_BORDE if completo else COLOR_ORO_BORDE
+
+	_aura.color = Color(color.r, color.g, color.b, 0.28)
+	_rotulo_mesa.text = "¡LISTO!" if completo else "¡RETO!"
+	_rotulo_mesa.add_theme_color_override("font_color", color)
+	_rotulo_mesa.add_theme_color_override("font_outline_color", borde)
+	_flecha.get_node("Relleno").color = color
+	_flecha.get_node("Contorno").color = borde
+	_flecha.visible = not completo
+	_chispas.emitting = not completo
+
+	# El rótulo queda justo encima de la flecha (o solo, si el reto ya se superó).
+	_rotulo_mesa.position.y = -26 if not completo else -12
+
+	if completo:
+		_oscilar(_aura, "modulate:a", 0.6, 1.0, 1.6)
+		return
+
+	_oscilar(_aura, "modulate:a", 0.35, 1.0, 0.55)
+	_oscilar(_aura, "scale", Vector2(0.92, 0.92), Vector2(1.12, 1.12), 0.55)
+	_oscilar(_marcador, "position:y", -26.0, -31.0, 0.45)
 
 
 ## Instancia el personaje elegido y fija su cámara al tamaño del cuarto.
@@ -221,6 +327,7 @@ func _abrir_reto() -> void:
 func _on_reto_terminado(completado: bool) -> void:
 	if completado:
 		GameState.agregar_sello(GameState.area_elegida)
+		Audio.sfx("sello")
 	_actualizar_mesa()
 	_actualizar_titulo()
 	_actualizar_prompt()
@@ -304,6 +411,8 @@ func _on_salida_body_exited(body: Node) -> void:
 func _on_mesa_body_entered(body: Node) -> void:
 	if body == jugador:
 		jugador_en_mesa_reto = true
+		if not GameState.tiene_sello(GameState.area_elegida):
+			Audio.sfx("reto_cerca")
 		_actualizar_prompt()
 
 

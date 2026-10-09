@@ -66,7 +66,9 @@ func animatePLayer():
 		$Sprite2D.frame = FRAME_QUIETO.get(lastDirection, 0)
 
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	validateInput()
 	animatePLayer()
 	move_and_slide()
+	# Sonido de pasos: solo suena mientras el personaje realmente se mueve.
+	Audio.pasos(get_real_velocity().length() > 5.0, delta)
