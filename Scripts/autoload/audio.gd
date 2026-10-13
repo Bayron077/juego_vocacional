@@ -10,7 +10,7 @@ const EXTENSIONES := [".ogg", ".wav", ".mp3"]
 ## Volúmenes en decibeles: 0 = original, -6 ≈ la mitad, -12 ≈ un cuarto.
 const VOLUMEN_MUSICA_DB := -9.0
 const VOLUMEN_SFX_DB := -3.0
-const VOLUMEN_PASOS_DB := -9.0
+const VOLUMEN_PASOS_DB := -4.0
 
 ## Segundos que dura el cambio suave entre una canción y otra.
 const FUNDIDO := 0.7
@@ -37,6 +37,10 @@ const EFECTOS := [
 	"reto_cerca", "sello", "exito", "error",
 ]
 const CANALES_EFECTOS := 6
+
+## Con true, la pestaña Salida del editor muestra qué sonidos se piden y cuáles
+## no existen. Ponlo en false cuando todo funcione.
+const DEPURAR := true
 
 var _musica: Array[AudioStreamPlayer] = []
 var _musica_activa: int = 0
@@ -76,9 +80,10 @@ func _ready() -> void:
 	add_child(_reproductor_pasos)
 
 	for nombre in EFECTOS:
-		var flujo := _cargar(CARPETA_SFX + nombre)
-		if flujo != null:
-			_efectos[nombre] = flujo
+		_asegurar_efecto(nombre)
+
+	if DEPURAR:
+		print("Audio: efectos cargados -> ", _efectos.keys())
 
 	# Sonido automático en TODOS los botones del juego, sin tocar cada escena.
 	get_tree().node_added.connect(_on_nodo_agregado)
@@ -100,6 +105,9 @@ func _unhandled_input(event: InputEvent) -> void:
 ## Reproduce un efecto por su nombre (ver EFECTOS). "variacion" cambia un poco el
 ## tono al azar para que no suene idéntico cada vez.
 func sfx(nombre: String, variacion: float = 0.0) -> void:
+	_asegurar_efecto(nombre)
+	if DEPURAR:
+		print("Audio.sfx: ", nombre, " | cargado: ", _efectos.has(nombre))
 	if not _efectos.has(nombre):
 		return
 	var canal := _canales[_siguiente_canal]
@@ -121,12 +129,16 @@ func pasos(moviendo: bool, delta: float) -> void:
 		return
 	_tiempo_pasos = 0.0
 	_paso_alterno = not _paso_alterno
-	var flujo: AudioStream = _efectos.get("paso_1" if _paso_alterno else "paso_2")
+	var nombre_paso := "paso_1" if _paso_alterno else "paso_2"
+	_asegurar_efecto(nombre_paso)
+	var flujo: AudioStream = _efectos.get(nombre_paso)
 	if flujo == null:
 		return
 	_reproductor_pasos.stream = flujo
 	_reproductor_pasos.pitch_scale = randf_range(0.92, 1.08)
 	_reproductor_pasos.play()
+	if DEPURAR:
+		print("Audio: paso")
 
 
 ## Cambia la música con un fundido. Pasar "" la detiene.
@@ -134,6 +146,8 @@ func musica(pista: String) -> void:
 	if pista == _pista_actual:
 		return
 	_pista_actual = pista
+	if DEPURAR:
+		print("Audio: música -> ", pista)
 
 	var anterior := _musica[_musica_activa]
 	_musica_activa = 1 - _musica_activa
@@ -189,6 +203,24 @@ func _on_boton_presionado() -> void:
 	sfx("ui_aceptar")
 
 
+## Carga un efecto la primera vez que se necesita (si ya está cargado, no hace nada).
+func _asegurar_efecto(nombre: String) -> void:
+	if _efectos.has(nombre):
+		return
+	var flujo := _cargar(CARPETA_SFX + nombre)
+	if flujo == null:
+		# No está en la carpeta esperada: lo busca en cualquier subcarpeta de audio.
+		var ruta := _buscar("res://assets/audio", nombre)
+		if ruta != "":
+			flujo = load(ruta) as AudioStream
+			if DEPURAR:
+				print("Audio: '", nombre, "' encontrado en otra carpeta -> ", ruta)
+	if flujo != null:
+		_efectos[nombre] = flujo
+	elif DEPURAR:
+		print("Audio: NO existe el efecto '", nombre, "'")
+
+
 ## Busca el archivo con cualquiera de las extensiones permitidas.
 func _cargar(ruta_sin_extension: String) -> AudioStream:
 	for extension in EXTENSIONES:
@@ -197,6 +229,25 @@ func _cargar(ruta_sin_extension: String) -> AudioStream:
 			return load(ruta) as AudioStream
 	push_warning("Audio: no se encontró '%s'." % ruta_sin_extension)
 	return null
+
+
+## Recorre las carpetas buscando "nombre.ogg/.wav/.mp3". Devuelve "" si no hay.
+func _buscar(carpeta: String, nombre: String) -> String:
+	var dir := DirAccess.open(carpeta)
+	if dir == null:
+		return ""
+	for sub in dir.get_directories():
+		var r := _buscar(carpeta + "/" + sub, nombre)
+		if r != "":
+			return r
+	for archivo in dir.get_files():
+		var limpio := archivo.trim_suffix(".import").trim_suffix(".remap")
+		for extension in EXTENSIONES:
+			if limpio == nombre + extension:
+				var ruta := carpeta + "/" + limpio
+				if ResourceLoader.exists(ruta):
+					return ruta
+	return ""
 
 
 ## Hace que la canción se repita sin parar.

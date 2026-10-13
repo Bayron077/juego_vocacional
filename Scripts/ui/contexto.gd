@@ -11,6 +11,10 @@ const RUTAS_FONDOS: Array[String] = [
 const RUTA_LEVY := "res://assets/levy.png"
 const RUTA_EDA := "res://assets/Eda.png"
 
+## Fuente de títulos (Jersey 10): nítida en 10, 20 y 30.
+const RUTA_FUENTE_TITULO := "res://assets/fuentes/fuente_titulo.ttf"
+const TAM_HISTORIA := 20
+
 ## Cuadro de la hoja de sprites que se muestra. 9 = el personaje de espaldas,
 ## mirando al paisaje. Si se ve de frente y lo quieres de espaldas (o al revés),
 ## cambia este número: 0 = de frente, 9 = de espaldas, 18 = izquierda, 27 = derecha.
@@ -110,7 +114,12 @@ func _acomodar_interfaz() -> void:
 	_texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_texto.remove_theme_font_size_override("font_size")
+	if ResourceLoader.exists(RUTA_FUENTE_TITULO):
+		_texto.add_theme_font_override("font", load(RUTA_FUENTE_TITULO))
+		_texto.add_theme_font_size_override("font_size", TAM_HISTORIA)
+		_texto.add_theme_constant_override("line_spacing", -4)
+	else:
+		_texto.remove_theme_font_size_override("font_size")
 
 	_boton.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_boton.position = Vector2(394, 228)

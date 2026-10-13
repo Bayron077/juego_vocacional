@@ -10,10 +10,14 @@ extends CanvasLayer
 signal terminado(completado: bool)
 
 const TAM_TITULO := 12
-const TAM_TEXTO := 9
-const TAM_SIMBOLO := 14
+const TAM_TEXTO := 12
+const TAM_SIMBOLO := 16
 
-const LARGO_SECUENCIA := 4
+## Dificultad de las secuencias: una ronda por valor. Cada ronda es más larga
+## y se muestra más rápido. Si fallas, la ronda se repite con otra secuencia.
+const LARGOS_SECUENCIA := [4, 5, 6]
+const DURACION_DESTELLO := [0.5, 0.4, 0.3]   # segundos que se ilumina cada celda
+const PAUSA_DESTELLO := [0.2, 0.15, 0.1]     # segundos entre celda y celda
 const COLOR_ACENTO_DEFECTO := Color(1.0, 0.85, 0.25)
 
 # Celdas de la cruz: 0 = arriba, 1 = abajo, 2 = izquierda, 3 = derecha.
@@ -36,8 +40,15 @@ const POS_CENTRO := Vector2(130, 32)
 
 const ANCHO_PISTA := 280.0
 const ALTO_PISTA := 18.0
-const ANCHOS_ZONA := [90.0, 64.0, 44.0]   # una ronda por valor, cada vez más estrecha
-const VELOCIDADES := [0.7, 0.95, 1.2]     # recorridos de la barra por segundo
+## Dificultad de la barra: una ronda por valor, cada vez más estrecha y rápida.
+## Si fallas, retrocedes una ronda (nunca se pierde del todo).
+const ANCHOS_ZONA := [72.0, 58.0, 48.0, 42.0, 36.0]
+const VELOCIDADES := [0.6, 0.9, 1.25, 1.6, 2.0]    # recorridos de la barra por segundo
+## Color de la barra en cada ronda: blanco, amarillo, naranja, rojo... se nota que acelera.
+const COLORES_RONDA := [
+	Color(1, 1, 1), Color(1, 0.95, 0.55), Color(1, 0.78, 0.3),
+	Color(1, 0.5, 0.25), Color(1, 0.25, 0.25),
+]
 
 enum Fase { INTRO, JUGANDO, FINAL }
 
@@ -56,6 +67,7 @@ var _pista: Label
 
 # --- Secuencia ---
 var _secuencia: Array[int] = []
+var _ronda_sec := 0
 var _celdas: Array[Panel] = []
 var _estilos: Array[StyleBoxFlat] = []
 var _base: Array[Color] = []
@@ -118,7 +130,7 @@ func _ready() -> void:
 	caja.add_child(_zona)
 
 	_pista = _crear_label(TAM_TEXTO)
-	_pista.modulate = Color(1, 1, 1, 0.75)
+	_pista.add_theme_color_override("font_color", Color(0.8, 0.84, 0.95))  # opaco: con transparencia las letras se ven borrosas
 	caja.add_child(_pista)
 
 
@@ -278,11 +290,19 @@ func _empezar_secuencia() -> void:
 	_centro.modulate = Color(1, 1, 1, 0.7)
 	_zona.add_child(_centro)
 
-	_secuencia.clear()
-	for i in LARGO_SECUENCIA:
-		_secuencia.append(randi() % 4)
-
+	_ronda_sec = 0
+	_generar_secuencia()
 	_mostrar_secuencia()
+
+
+func _largo() -> int:
+	return LARGOS_SECUENCIA[_ronda_sec]
+
+
+func _generar_secuencia() -> void:
+	_secuencia.clear()
+	for i in _largo():
+		_secuencia.append(randi() % 4)
 
 
 ## Símbolo de una celda: la imagen de la ficha si existe; si no, flecha o letra.
@@ -318,14 +338,14 @@ func _destello(i: int, color: Color, segundos: float) -> void:
 func _mostrar_secuencia() -> void:
 	_aceptando = false
 	_indice = 0
-	_centro.text = "0/%d" % LARGO_SECUENCIA
-	_pista.text = "Memoriza la secuencia..."
+	_centro.text = "0/%d" % _largo()
+	_pista.text = "Memoriza la secuencia... (ronda %d/%d)" % [_ronda_sec + 1, LARGOS_SECUENCIA.size()]
 	await _esperar(0.6)
 	for celda in _secuencia:
 		if _fase != Fase.JUGANDO:
 			return
-		await _destello(celda, _luz[celda], 0.5)
-		await _esperar(0.2)
+		await _destello(celda, _luz[celda], DURACION_DESTELLO[_ronda_sec])
+		await _esperar(PAUSA_DESTELLO[_ronda_sec])
 	if _fase != Fase.JUGANDO:
 		return
 	if _es_botones():
@@ -341,18 +361,28 @@ func _pulsar_celda(i: int) -> void:
 	if i == _secuencia[_indice]:
 		_destello(i, _luz[i], 0.2)
 		_indice += 1
-		_centro.text = "%d/%d" % [_indice, LARGO_SECUENCIA]
-		if _indice >= LARGO_SECUENCIA:
+		_centro.text = "%d/%d" % [_indice, _largo()]
+		if _indice >= _largo():
 			_aceptando = false
 			await _esperar(0.35)
-			if _fase == Fase.JUGANDO:
+			if _fase != Fase.JUGANDO:
+				return
+			if _ronda_sec + 1 >= LARGOS_SECUENCIA.size():
 				_ganar()
+			else:
+				_ronda_sec += 1
+				_pista.text = "¡Bien! Ahora más larga y más rápida..."
+				await _esperar(1.0)
+				if _fase == Fase.JUGANDO:
+					_generar_secuencia()
+					_mostrar_secuencia()
 	else:
 		_aceptando = false
 		_destello(i, Color(0.9, 0.2, 0.2), 0.4)
-		_pista.text = "¡Casi! Mírala otra vez"
+		_pista.text = "¡Casi! Va una secuencia nueva..."
 		await _esperar(0.9)
 		if _fase == Fase.JUGANDO:
+			_generar_secuencia()
 			_mostrar_secuencia()
 
 
@@ -404,7 +434,9 @@ func _nueva_ronda_timing() -> void:
 	_zona_verde.position.x = randf_range(20.0, ANCHO_PISTA - ancho - 20.0)
 	_pos = 0.0
 	_dir = 1.0
-	_pista.text = "Pulsa A cuando la barra esté en la zona verde (%d/%d)" % [_ronda, ANCHOS_ZONA.size()]
+	_pista.text = "Ronda %d/%d · Pulsa A en la zona verde" % [_ronda + 1, ANCHOS_ZONA.size()]
+	if _marcador is ColorRect:
+		(_marcador as ColorRect).color = COLORES_RONDA[mini(_ronda, COLORES_RONDA.size() - 1)]
 	_activo = true
 
 
@@ -438,7 +470,12 @@ func _pulsar_timing() -> void:
 			if _fase == Fase.JUGANDO:
 				_nueva_ronda_timing()
 	else:
-		_pista.text = "¡Casi! Inténtalo otra vez"
+		_activo = false
+		_ronda = maxi(_ronda - 1, 0)
+		_pista.text = "¡Casi! Retrocedes una ronda..."
+		await _esperar(0.8)
+		if _fase == Fase.JUGANDO:
+			_nueva_ronda_timing()
 
 
 # ------------------------------------------------------------- Final / cierre
@@ -457,7 +494,7 @@ func _ganar() -> void:
 	estrella.set_anchors_preset(Control.PRESET_FULL_RECT)
 	estrella.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	estrella.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	estrella.add_theme_font_size_override("font_size", 40)
+	estrella.add_theme_font_size_override("font_size", 48)
 	estrella.add_theme_color_override("font_color", _acento)
 	estrella.text = "★"
 	_zona.add_child(estrella)

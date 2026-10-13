@@ -9,7 +9,10 @@ signal cerrado
 signal decision_tomada(ver_resultados: bool)
 
 const TAM_TITULO := 12
-const TAM_BOTON := 10
+const TAM_BOTON := 12
+const TAM_LEYENDA := 12
+const LINEAS_LEYENDA := 4
+const COLOR_LEYENDA := Color(0.72, 0.75, 0.88)
 
 var tipo_actual: int = Npc.Tipo.FORTALEZA_1
 var categoria_actual: String = ""
@@ -18,12 +21,32 @@ var en_decision: bool = false
 @onready var titulo: Label = $Marco/Margen/Caja/Titulo
 @onready var lista: VBoxContainer = $Marco/Margen/Caja/Lista
 
+## Texto de ayuda bajo la lista: la definición de la opción enfocada.
+var leyenda: Label
+
 
 func _ready() -> void:
 	# Debe seguir funcionando mientras el juego está en pausa.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	titulo.add_theme_font_size_override("font_size", TAM_TITULO)
+	_crear_leyenda()
 	visible = false
+
+
+func _crear_leyenda() -> void:
+	leyenda = Label.new()
+	leyenda.add_theme_font_size_override("font_size", TAM_LEYENDA)
+	leyenda.add_theme_color_override("font_color", COLOR_LEYENDA)
+	leyenda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	leyenda.max_lines_visible = LINEAS_LEYENDA
+	leyenda.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# Alto fijo para que el panel no "salte" al cambiar de opción.
+	leyenda.custom_minimum_size = Vector2(0, 16 * LINEAS_LEYENDA)
+	$Marco/Margen/Caja.add_child(leyenda)  # queda debajo de la lista
+
+
+func _mostrar_leyenda(texto: String) -> void:
+	leyenda.text = texto
 
 
 func abrir(tipo: int) -> void:
@@ -40,6 +63,7 @@ func abrir_decision() -> void:
 	get_tree().paused = true
 	_limpiar_lista()
 	titulo.text = "¡Tu perfil está listo!\n¿Qué quieres hacer?"
+	_mostrar_leyenda("")
 
 	var ver := _crear_boton("Ver mis resultados")
 	ver.pressed.connect(_on_decision.bind(true))
@@ -73,7 +97,7 @@ func _mostrar_categorias() -> void:
 
 	var primero: Button = null
 	for categoria in CatalogoDialogo.categorias_para(tipo_actual):
-		var boton := _crear_boton(categoria)
+		var boton := _crear_boton(categoria, CatalogoDialogo.resumen_categoria(tipo_actual, categoria))
 		boton.pressed.connect(_on_categoria_elegida.bind(categoria))
 		if primero == null:
 			primero = boton
@@ -90,7 +114,7 @@ func _mostrar_opciones() -> void:
 	for valor in CatalogoDialogo.categorias_para(tipo_actual)[categoria_actual]:
 		if valor == bloqueado:
 			continue
-		var boton := _crear_boton(valor)
+		var boton := _crear_boton(valor, CatalogoDialogo.definicion_de(valor))
 		boton.pressed.connect(_on_opcion_elegida.bind(valor))
 		if primero == null:
 			primero = boton
@@ -111,10 +135,13 @@ func _valor_bloqueado() -> String:
 	return ""
 
 
-func _crear_boton(texto: String) -> Button:
+func _crear_boton(texto: String, ayuda: String = "") -> Button:
 	var boton := Button.new()
 	boton.text = texto
 	boton.add_theme_font_size_override("font_size", TAM_BOTON)
+	# Al enfocar el botón (mando, teclado o mouse) se muestra su leyenda.
+	boton.focus_entered.connect(_mostrar_leyenda.bind(ayuda))
+	boton.mouse_entered.connect(boton.grab_focus)
 	lista.add_child(boton)
 	return boton
 
