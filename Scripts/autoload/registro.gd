@@ -15,8 +15,8 @@ signal codigo_cambiado(codigo: String)
 const RUTA_CONFIG := "res://data/registro_config.json"
 const RUTA_COLA := "user://registro_pendientes.json"
 
-## Sin 0, O, 1, I ni L para que nadie los confunda al leer el código.
-const ALFABETO := "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+## Solo letras y números que no se confunden entre sí (sin S/5, B/8, Z/2, G/6, U/V, D/O/0, I/L/1, Q).
+const ALFABETO := "ACEFHJKMNPRTWXY3479"
 const LARGO_CODIGO := 4
 
 const SEGUNDOS_REINTENTO := 30.0
