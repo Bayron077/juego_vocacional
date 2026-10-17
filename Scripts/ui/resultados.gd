@@ -49,6 +49,7 @@ func _ready() -> void:
 		GameState.fortaleza_2,
 		GameState.objetivo
 	)
+	Registro.enviar_resultado(top)
 	_poner_fondo_arte()
 	_poner_confeti()
 	_construir(top)

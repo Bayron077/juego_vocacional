@@ -18,7 +18,8 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 
 GameState="*uid://cnf0c3jg2bkef"
 Audio="*uid://dic3ba43mwyad"
-MandoDebug="*uid://bg6ni5a42y8lb"
+FpsDebug="*uid://dtwjghqwjgt2j"
+Registro="*uid://lim06olwao5y"
 
 [display]
 

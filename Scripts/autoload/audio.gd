@@ -40,7 +40,7 @@ const CANALES_EFECTOS := 6
 
 ## Con true, la pestaña Salida del editor muestra qué sonidos se piden y cuáles
 ## no existen. Ponlo en false cuando todo funcione.
-const DEPURAR := true
+const DEPURAR := false
 
 var _musica: Array[AudioStreamPlayer] = []
 var _musica_activa: int = 0

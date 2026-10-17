@@ -33,6 +33,10 @@ func tiene_sello(area: String) -> bool:
 func _ready() -> void:
 	# Debe seguir contando aunque el juego esté en pausa (diálogo abierto).
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# En la versión exportada (stand) no se muestra el cursor del mouse.
+	if not OS.has_feature("editor"):
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+
 
 
 func _input(event: InputEvent) -> void:
