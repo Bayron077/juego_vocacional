@@ -104,7 +104,7 @@ func _process(delta: float) -> void:
 
 
 func _construir_panel_registro() -> void:
-	var qr := QRCodigo.crear(Registro.url_formulario())
+	var qr := QRCodigo.crear(Registro.url_formulario(), QRCodigo.Ecc.L)
 	if qr == null:
 		push_warning("Inicio: no se pudo generar el QR de registro.")
 		return
