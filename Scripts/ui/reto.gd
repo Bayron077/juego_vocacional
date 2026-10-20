@@ -15,9 +15,9 @@ const TAM_SIMBOLO := 16
 
 ## Dificultad de las secuencias: una ronda por valor. Cada ronda es más larga
 ## y se muestra más rápido. Si fallas, la ronda se repite con otra secuencia.
-const LARGOS_SECUENCIA := [4, 5, 6]
-const DURACION_DESTELLO := [0.5, 0.4, 0.3]   # segundos que se ilumina cada celda
-const PAUSA_DESTELLO := [0.2, 0.15, 0.1]     # segundos entre celda y celda
+const LARGOS_SECUENCIA := [3, 4]
+const DURACION_DESTELLO := [0.55, 0.45]   # segundos que se ilumina cada celda
+const PAUSA_DESTELLO := [0.2, 0.15]       # segundos entre celda y celda
 const COLOR_ACENTO_DEFECTO := Color(1.0, 0.85, 0.25)
 
 # Celdas de la cruz: 0 = arriba, 1 = abajo, 2 = izquierda, 3 = derecha.
@@ -41,9 +41,9 @@ const POS_CENTRO := Vector2(130, 32)
 const ANCHO_PISTA := 280.0
 const ALTO_PISTA := 18.0
 ## Dificultad de la barra: una ronda por valor, cada vez más estrecha y rápida.
-## Si fallas, retrocedes una ronda (nunca se pierde del todo).
-const ANCHOS_ZONA := [72.0, 58.0, 48.0, 42.0, 36.0]
-const VELOCIDADES := [0.6, 0.9, 1.25, 1.6, 2.0]    # recorridos de la barra por segundo
+## Si fallas, repites la misma ronda (no se retrocede, para no alargar el reto).
+const ANCHOS_ZONA := [90.0, 72.0, 58.0]
+const VELOCIDADES := [0.5, 0.7, 0.95]  # recorridos de la barra por segundo
 ## Color de la barra en cada ronda: blanco, amarillo, naranja, rojo... se nota que acelera.
 const COLORES_RONDA := [
 	Color(1, 1, 1), Color(1, 0.95, 0.55), Color(1, 0.78, 0.3),
@@ -340,7 +340,7 @@ func _mostrar_secuencia() -> void:
 	_indice = 0
 	_centro.text = "0/%d" % _largo()
 	_pista.text = "Memoriza la secuencia... (ronda %d/%d)" % [_ronda_sec + 1, LARGOS_SECUENCIA.size()]
-	await _esperar(0.6)
+	await _esperar(0.4)
 	for celda in _secuencia:
 		if _fase != Fase.JUGANDO:
 			return
@@ -371,8 +371,8 @@ func _pulsar_celda(i: int) -> void:
 				_ganar()
 			else:
 				_ronda_sec += 1
-				_pista.text = "¡Bien! Ahora más larga y más rápida..."
-				await _esperar(1.0)
+				_pista.text = "¡Bien! Ahora una más larga..."
+				await _esperar(0.7)
 				if _fase == Fase.JUGANDO:
 					_generar_secuencia()
 					_mostrar_secuencia()
@@ -380,7 +380,7 @@ func _pulsar_celda(i: int) -> void:
 		_aceptando = false
 		_destello(i, Color(0.9, 0.2, 0.2), 0.4)
 		_pista.text = "¡Casi! Va una secuencia nueva..."
-		await _esperar(0.9)
+		await _esperar(0.7)
 		if _fase == Fase.JUGANDO:
 			_generar_secuencia()
 			_mostrar_secuencia()
@@ -465,15 +465,14 @@ func _pulsar_timing() -> void:
 		if _ronda >= ANCHOS_ZONA.size():
 			_ganar()
 		else:
-			_pista.text = "¡Bien! Ahora más difícil..."
-			await _esperar(0.8)
+			_pista.text = "¡Bien! Ahora un poco más difícil..."
+			await _esperar(0.6)
 			if _fase == Fase.JUGANDO:
 				_nueva_ronda_timing()
 	else:
 		_activo = false
-		_ronda = maxi(_ronda - 1, 0)
-		_pista.text = "¡Casi! Retrocedes una ronda..."
-		await _esperar(0.8)
+		_pista.text = "¡Casi! Inténtalo otra vez..."
+		await _esperar(0.6)
 		if _fase == Fase.JUGANDO:
 			_nueva_ronda_timing()
 
